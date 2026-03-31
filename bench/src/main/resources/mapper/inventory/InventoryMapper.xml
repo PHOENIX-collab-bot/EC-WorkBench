@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ec.workbench.module.inventory.mapper.InventoryMapper">
+
+    <select id="countWarn" resultType="long">
+        SELECT COUNT(1)
+        FROM product p
+        WHERE p.merchant_id = 1
+          AND p.is_deleted = 0
+          AND p.status = 1
+          AND p.stock_quantity <![CDATA[<=]]> p.stock_warn_threshold
+    </select>
+
+    <select id="selectWarnPage" resultType="com.ec.workbench.module.inventory.vo.InventoryWarnVO">
+        SELECT p.id AS product_id,
+               p.product_no,
+               p.product_name,
+               p.stock_quantity,
+               p.stock_warn_threshold,
+               p.status
+        FROM product p
+        WHERE p.merchant_id = 1
+          AND p.is_deleted = 0
+          AND p.status = 1
+          AND p.stock_quantity <![CDATA[<=]]> p.stock_warn_threshold
+        ORDER BY p.stock_quantity ASC, p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <sql id="recordWhere">
+        ir.merchant_id = 1
+        <if test="q.productId != null">
+            AND ir.product_id = #{q.productId}
+        </if>
+        <if test="q.bizType != null">
+            AND ir.biz_type = #{q.bizType}
+        </if>
+        <if test="q.bizNo != null and q.bizNo != ''">
+            AND ir.biz_no = #{q.bizNo}
+        </if>
+        <if test="q.startTime != null">
+            AND ir.operate_time <![CDATA[>=]]> #{q.startTime}
+        </if>
+        <if test="q.endTime != null">
+            AND ir.operate_time <![CDATA[<=]]> #{q.endTime}
+        </if>
+    </sql>
+
+    <select id="countRecordPage" resultType="long">
+        SELECT COUNT(1)
+        FROM inventory_record ir
+        WHERE <include refid="recordWhere"/>
+    </select>
+
+    <select id="selectRecordPage" resultType="com.ec.workbench.module.inventory.vo.InventoryRecordVO">
+        SELECT ir.id,
+               ir.record_no,
+               ir.product_id,
+               p.product_no,
+               p.product_name,
+               ir.biz_type,
+               ir.biz_no,
+               ir.change_qty,
+               ir.stock_before,
+               ir.stock_after,
+               ir.operator_id,
+               ir.operate_time,
+               ir.remark
+        FROM inventory_record ir
+                 LEFT JOIN product p ON p.id = ir.product_id
+        WHERE <include refid="recordWhere"/>
+        ORDER BY ir.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectProductById" resultType="com.ec.workbench.module.product.entity.Product">
+        SELECT *
+        FROM product
+        WHERE id = #{productId} AND merchant_id = 1
+        LIMIT 1
+    </select>
+
+    <update id="updateProductStock">
+        UPDATE product
+        SET stock_quantity = #{stockQuantity},
+            updated_by     = #{updatedBy}
+        WHERE id = #{productId} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO inventory_record (
+            merchant_id, record_no, product_id, biz_type, biz_no,
+            change_qty, stock_before, stock_after, operator_id, operate_time, remark
+        ) VALUES (
+            #{merchantId}, #{recordNo}, #{productId}, #{bizType}, #{bizNo},
+            #{changeQty}, #{stockBefore}, #{stockAfter}, #{operatorId}, #{operateTime}, #{remark}
+        )
+    </insert>
+
+</mapper>

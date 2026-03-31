@@ -1,0 +1,74 @@
+:root {
+    --g-bg: #f8f9fa;
+    --g-surface: #fff;
+    --g-text: #202124;
+    --g-subtext: #5f6368;
+    --g-border: #dadce0;
+    --g-primary: #1a73e8;
+    --g-shadow: 0 1px 2px rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Roboto, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--g-bg);
+    color: var(--g-text);
+}
+
+.page-card {
+    background: var(--g-surface);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--g-border);
+    box-shadow: var(--g-shadow);
+}
+
+.ant-layout {
+    background: var(--g-bg) !important;
+}
+
+.ant-layout-sider,
+.ant-layout-header {
+    border-color: var(--g-border);
+}
+
+.ant-layout-sider {
+    border-right: 1px solid var(--g-border);
+}
+
+.ant-layout-header {
+    border-bottom: 1px solid var(--g-border);
+}
+
+.ant-btn-primary {
+    box-shadow: none;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused,
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused {
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, .15) !important;
+}
+
+.ai-assistant-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.ai-assistant-scroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}

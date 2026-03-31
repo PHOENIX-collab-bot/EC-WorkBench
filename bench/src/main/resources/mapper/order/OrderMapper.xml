@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ec.workbench.module.order.mapper.OrderMapper">
+
+    <sql id="baseWhere">
+        o.merchant_id = 1
+        AND o.is_deleted = 0
+        <if test="q.orderNo != null and q.orderNo != ''">
+            AND o.order_no = #{q.orderNo}
+        </if>
+        <if test="q.orderStatus != null">
+            AND o.order_status = #{q.orderStatus}
+        </if>
+        <if test="q.customerKeyword != null and q.customerKeyword != ''">
+            AND (o.customer_name LIKE CONCAT('%', #{q.customerKeyword}, '%')
+            OR o.customer_mobile LIKE CONCAT('%', #{q.customerKeyword}, '%'))
+        </if>
+        <if test="q.startTime != null">
+            AND o.created_at <![CDATA[>=]]> #{q.startTime}
+        </if>
+        <if test="q.endTime != null">
+            AND o.created_at <![CDATA[<=]]> #{q.endTime}
+        </if>
+    </sql>
+
+    <select id="countPage" resultType="long">
+        SELECT COUNT(1)
+        FROM orders o
+        WHERE <include refid="baseWhere"/>
+    </select>
+
+    <select id="selectPage" resultType="com.ec.workbench.module.order.vo.OrderVO">
+        SELECT o.id,
+               o.order_no,
+               o.order_status,
+               o.pay_status,
+               o.delivery_status,
+               o.customer_name,
+               o.customer_mobile,
+               o.payable_amount,
+               o.paid_amount,
+               o.created_at
+        FROM orders o
+        WHERE <include refid="baseWhere"/>
+        ORDER BY o.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectById" resultType="com.ec.workbench.module.order.entity.Orders">
+        SELECT * FROM orders WHERE id = #{id} AND merchant_id = 1 LIMIT 1
+    </select>
+
+    <select id="selectDetailById" resultType="com.ec.workbench.module.order.vo.OrderDetailVO">
+        SELECT o.id,
+               o.order_no,
+               o.order_status,
+               o.pay_status,
+               o.delivery_status,
+               o.customer_name,
+               o.customer_mobile,
+               o.receiver_name,
+               o.receiver_mobile,
+               o.address_detail,
+               o.total_amount,
+               o.payable_amount,
+               o.paid_amount,
+               o.seller_remark,
+               o.delivery_time,
+               o.created_at
+        FROM orders o
+        WHERE o.id = #{id} AND o.merchant_id = 1 AND o.is_deleted = 0
+        LIMIT 1
+    </select>
+
+    <select id="selectItemsByOrderId" resultType="com.ec.workbench.module.order.vo.OrderItemVO">
+        SELECT id,
+               product_id,
+               product_no,
+               product_name,
+               sku_attr,
+               unit_price,
+               quantity,
+               line_total_amount,
+               item_status
+        FROM order_item
+        WHERE order_id = #{orderId}
+        ORDER BY id ASC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE orders
+        SET order_status = #{orderStatus},
+            updated_by = #{updatedBy}
+        WHERE id = #{id} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+    <update id="deliver">
+        UPDATE orders
+        SET delivery_status = 2,
+            order_status   = 2,
+            delivery_time  = #{deliveryTime},
+            seller_remark  = #{sellerRemark},
+            updated_by     = #{updatedBy}
+        WHERE id = #{id} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+</mapper>

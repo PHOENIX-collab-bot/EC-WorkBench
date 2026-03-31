@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ec.workbench.module.product.mapper.ProductCategoryMapper">
+
+    <select id="selectAll" resultType="com.ec.workbench.module.product.vo.ProductCategoryVO">
+        SELECT id, parent_id, category_name, category_code, level_no, sort_no, status
+        FROM product_category
+        WHERE merchant_id = 1
+          AND is_deleted = 0
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY sort_no ASC, id ASC
+    </select>
+
+    <select id="selectById" resultType="com.ec.workbench.module.product.entity.ProductCategory">
+        SELECT * FROM product_category WHERE id = #{id} AND merchant_id = 1 LIMIT 1
+    </select>
+
+    <select id="countByCode" resultType="long">
+        SELECT COUNT(1)
+        FROM product_category
+        WHERE merchant_id = 1
+          AND is_deleted = 0
+          AND category_code = #{categoryCode}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_category(
+            merchant_id, parent_id, category_name, category_code, level_no, tree_path,
+            sort_no, status, is_deleted, remark, created_by, updated_by
+        ) VALUES (
+            #{merchantId}, #{parentId}, #{categoryName}, #{categoryCode}, #{levelNo}, #{treePath},
+            #{sortNo}, #{status}, #{isDeleted}, #{remark}, #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <update id="updateById">
+        UPDATE product_category
+        <set>
+            parent_id = #{parentId},
+            category_name = #{categoryName},
+            category_code = #{categoryCode},
+            level_no = #{levelNo},
+            sort_no = #{sortNo},
+            status = #{status},
+            remark = #{remark},
+            updated_by = #{updatedBy}
+        </set>
+        WHERE id = #{id} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+</mapper>

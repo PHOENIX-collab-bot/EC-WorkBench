@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ec.workbench.module.product.mapper.ProductMapper">
+
+    <sql id="baseWhere">
+        p.merchant_id = 1
+        AND p.is_deleted = 0
+        <if test="q.productNo != null and q.productNo != ''">
+            AND p.product_no = #{q.productNo}
+        </if>
+        <if test="q.productName != null and q.productName != ''">
+            AND p.product_name LIKE CONCAT('%', #{q.productName}, '%')
+        </if>
+        <if test="q.categoryId != null">
+            AND p.category_id = #{q.categoryId}
+        </if>
+        <if test="q.status != null">
+            AND p.status = #{q.status}
+        </if>
+    </sql>
+
+    <select id="countPage" resultType="long">
+        SELECT COUNT(1)
+        FROM product p
+        WHERE <include refid="baseWhere"/>
+    </select>
+
+    <select id="selectPage" resultType="com.ec.workbench.module.product.vo.ProductVO">
+        SELECT p.id,
+               p.product_no,
+               p.product_name,
+               p.category_id,
+               c.category_name,
+               p.sale_price,
+               p.stock_quantity,
+               p.stock_warn_threshold,
+               p.status,
+               p.created_at
+        FROM product p
+                 LEFT JOIN product_category c ON c.id = p.category_id
+        WHERE <include refid="baseWhere"/>
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectDetailById" resultType="com.ec.workbench.module.product.vo.ProductDetailVO">
+        SELECT p.id,
+               p.product_no,
+               p.category_id,
+               c.category_name,
+               p.product_name,
+               p.sub_title,
+               p.brand_name,
+               p.unit_name,
+               p.main_image,
+               p.sale_price,
+               p.cost_price,
+               p.market_price,
+               p.stock_quantity,
+               p.stock_warn_threshold,
+               p.status,
+               p.audit_status,
+               p.remark,
+               p.created_at,
+               p.updated_at
+        FROM product p
+                 LEFT JOIN product_category c ON c.id = p.category_id
+        WHERE p.id = #{id} AND p.merchant_id = 1 AND p.is_deleted = 0
+        LIMIT 1
+    </select>
+
+    <select id="selectById" resultType="com.ec.workbench.module.product.entity.Product">
+        SELECT * FROM product WHERE id = #{id} AND merchant_id = 1 LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (
+            merchant_id, product_no, category_id, product_name, sub_title, brand_name, unit_name, main_image,
+            sale_price, cost_price, market_price, stock_quantity, stock_locked, stock_warn_threshold,
+            sale_count, status, audit_status, is_deleted, remark, created_by, updated_by
+        ) VALUES (
+            #{merchantId}, #{productNo}, #{categoryId}, #{productName}, #{subTitle}, #{brandName}, #{unitName}, #{mainImage},
+            #{salePrice}, #{costPrice}, #{marketPrice}, #{stockQuantity}, #{stockLocked}, #{stockWarnThreshold},
+            #{saleCount}, #{status}, #{auditStatus}, #{isDeleted}, #{remark}, #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <update id="updateById">
+        UPDATE product
+        <set>
+            category_id = #{categoryId},
+            product_name = #{productName},
+            sub_title = #{subTitle},
+            brand_name = #{brandName},
+            unit_name = #{unitName},
+            main_image = #{mainImage},
+            sale_price = #{salePrice},
+            cost_price = #{costPrice},
+            market_price = #{marketPrice},
+            stock_quantity = #{stockQuantity},
+            stock_warn_threshold = #{stockWarnThreshold},
+            remark = #{remark},
+            updated_by = #{updatedBy}
+        </set>
+        WHERE id = #{id} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+    <update id="updateStatus">
+        UPDATE product
+        SET status = #{status},
+            updated_by = #{updatedBy}
+        WHERE id = #{id} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+
+
+    <update id="softDelete">
+        UPDATE product
+        SET is_deleted = 1,
+            updated_by = #{updatedBy}
+        WHERE id = #{id} AND merchant_id = 1 AND is_deleted = 0
+    </update>
+
+</mapper>
