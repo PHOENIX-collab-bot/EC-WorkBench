@@ -2,7 +2,6 @@
 
 本文档给出可落地的完整构建流程，适合本地开发、团队协作和后续功能扩展。
 
----
 
 ## 1. 总体架构
 
@@ -22,7 +21,7 @@ Spring Boot API（鉴权、业务、AI代理）
 - 前端层：`frontend/src/pages/*` + `frontend/src/api/*`
 - AI 层：`module/ai`（后端）+ `pages/tools/CreativeAssistantPage.tsx`（前端）
 
----
+
 
 ## 2. 环境准备
 
@@ -41,7 +40,7 @@ npm -v
 mysql --version
 ```
 
----
+
 
 ## 3. 数据库构建流程（MySQL）
 
@@ -76,7 +75,7 @@ mysql -uroot -p123456 < db/data.sql
 new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("your_password_here")
 ```
 
----
+
 
 ## 4. 后端构建流程（Spring Boot + MyBatis）
 
@@ -143,7 +142,7 @@ Windows：
 
 当前 `/api/ai/**` 放开了匿名访问；生产建议改为登录后访问并增加频控。
 
----
+
 
 ## 5. 前端构建流程（React + Vite + TypeScript）
 
@@ -184,7 +183,7 @@ npm run preview
 
 前端 `request.ts` 已做统一 `unwrap`，业务代码只处理 `data`。
 
----
+
 
 ## 6. AI 功能详细构建流程
 
@@ -268,7 +267,7 @@ sequenceDiagram
 - 成本控制：增加调用配额与日预算
 - 安全：敏感词过滤与输出风控
 
----
+
 
 ## 7. 端到端联调检查清单
 
@@ -281,7 +280,7 @@ sequenceDiagram
 - [ ] AI 文案接口返回文本
 - [ ] AI 运营助手可根据问题返回建议
 
----
+
 
 ## 8. 常见问题与排查
 
@@ -297,7 +296,7 @@ sequenceDiagram
 4. **文案返回为空**  
    检查后端日志中 `choices/message/content` 解析结果与异常栈。
 
----
+
 
 ## 9. 推荐迭代路线
 
@@ -305,6 +304,4 @@ sequenceDiagram
 - 第 2 阶段：引入容器化（MySQL + 后端 + 前端）
 - 第 3 阶段：完善 AI 调用监控与审计系统
 - 第 4 阶段：增加多租户与数据隔离能力
-
----
 
