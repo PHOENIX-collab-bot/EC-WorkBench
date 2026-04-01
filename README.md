@@ -1,11 +1,18 @@
-# EC Workbench（电商工作台）
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;"> EC Workbench（电商工作台）</h1>
+<h4 align="center">一个面向中后台运营场景的电商管理系统，覆盖 商品、订单、库存、RBAC 权限、数据看板， AI 文案生成 + AI 运营问答助手</h4>
 
-一个面向中后台运营场景的电商管理系统，覆盖 **商品、订单、库存、RBAC 权限、数据看板**，并提供 **AI 文案生成 + AI 运营问答助手**。
 
-> 前端：React + Vite + TypeScript + Ant Design  
-> 后端：Spring Boot 3 + Spring Security + MyBatis + MySQL 8
+<p align="center">
+    <img src="https://img.shields.io/badge/react-18-blue" />
+    <img src="https://img.shields.io/badge/vite-5-purple" />
+    <img src="https://img.shields.io/badge/typescript-5-blue" />
+    <img src="https://img.shields.io/badge/ant--design-ui-blue" />
+    <img src="https://img.shields.io/badge/springboot-3.x-green" />
+    <img src="https://img.shields.io/badge/security-spring--security-green" />
+    <img src="https://img.shields.io/badge/mybatis-orm-lightgrey" />
+    <img src="https://img.shields.io/badge/mysql-8.0-orange" />
+</p>
 
----
 
 ## ✨ 功能概览
 
@@ -19,7 +26,7 @@
 	- 商品文案生成（营销风格化文案）
 	- 运营助手问答（可携带看板数据做诊断建议）
 
----
+
 
 ## 🧱 技术栈
 
@@ -40,7 +47,7 @@
 ### AI 集成
 - DeepSeek Chat Completions API（后端代理调用）
 
----
+
 
 ## 📁 项目结构
 
@@ -67,7 +74,7 @@ bench/
    └─ mapper/**/*.xml         # MyBatis SQL
 ```
 
----
+
 
 ## 🚀 快速开始
 
@@ -114,7 +121,6 @@ npm run dev
 
 > 前端已通过 Vite 代理 `/api -> http://localhost:8090`
 
----
 
 ## 🛠️ 本地部署流程
 
@@ -182,14 +188,14 @@ npm run dev
 
 > 注意：`db/data.sql` 中示例账号密码哈希是占位值。若登录失败，请先替换为真实 BCrypt 密码。
 
-### 常见报错（新手高频）
+### 常见报错
 
 - **后端启动失败，端口占用**：检查 `8090` 是否被其他程序占用
 - **数据库连接失败**：核对 MySQL 是否启动、账号密码是否正确
 - **前端请求 401**：先重新登录，确认 Token 已写入
 - **前端白屏**：先执行 `npm install` 后再 `npm run dev`
 
----
+
 
 ## 🤖 AI 功能说明
 
@@ -205,7 +211,7 @@ npm run dev
 
 > 建议将 `deepseek.api-key` 通过环境变量或私密配置注入，不要在公开仓库暴露真实密钥。
 
----
+
 
 ## 🔑 默认测试数据说明
 
@@ -214,7 +220,7 @@ npm run dev
 - `admin`
 - `operator`
 
----
+
 
 ##  常见问题
 
