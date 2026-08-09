@@ -1,4 +1,4 @@
-package main.java.com.ec.workbench.module.ai.dto;
+package com.ec.workbench.module.ai.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
