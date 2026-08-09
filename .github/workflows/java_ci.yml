@@ -32,4 +32,4 @@ jobs:
       # Maven构建
       - name: Build
         run: mvn package
-        working-directory: src
+        working-directory: bench
