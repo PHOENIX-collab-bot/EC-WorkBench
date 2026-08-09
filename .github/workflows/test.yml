@@ -1,0 +1,36 @@
+name: Java CI
+
+
+# 什么情况下触发
+on:
+  push:
+    branches:
+      - main
+
+
+# 要执行的任务
+jobs:
+
+  build:
+
+    # GitHub提供的服务器
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      # 第一步：拉取代码
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      # 第二步：安装Java
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+
+
+      # 第三步：编译
+      - name: Build
+        run: mvn package
