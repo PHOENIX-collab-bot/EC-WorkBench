@@ -1,4 +1,4 @@
-package com.ecworkbench.bench;
+package com.ec.workbench;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
